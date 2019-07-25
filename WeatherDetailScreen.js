@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 import { Constants } from 'expo';
 
-
+const APP_ID = 'ed47fd9ca2f0ce282cf330ecfd9fa587';
 
 export default class WeatherDetailScreen extends React.Component {
 
@@ -40,13 +40,13 @@ export default class WeatherDetailScreen extends React.Component {
 
     const { navigation } = this.props;
 
-    // const city = navigation.getParam('city', null);
+    const city = navigation.getParam('city', null);
 
-    const city = 'Daejeon';
+    // const city = 'Daejeon';
 
 
 
-    fetch(`http://demo6468405.mockable.io/weather-crawlers/current-weathers/by-city-name/${city}`)
+    fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${APP_ID}`)
 
       .then(response => response.json())
 
@@ -78,22 +78,22 @@ export default class WeatherDetailScreen extends React.Component {
 
         </View>
 
-      )
+      );
 
     }
 
 
 
     let celsius = this.state.main.temp - 273.15;
-
-
+    let weatherMain = this.state.weather[0].main;
+    let iconId = this.state.weather[0].icon;
 
     return (
 
       <View style={styles.container}>
-
-        <Text>온도: {celsius.toFixed(1)}</Text>
-
+        <Text style={styles.temp}>{celsius.toFixed(1)}°</Text>
+        <Text style={styles.main}>{weatherMain}</Text>
+        <Image source={{uri: `http://openweathermap.org/img/wn/${iconId}@2x.png`, width: 250, height: 250}} style={styles.image}/>
       </View>
 
     );
@@ -116,4 +116,25 @@ const styles = StyleSheet.create({
 
   },
 
+  temp: {
+    marginTop: 100,
+    fontSize: 60,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#397db1',
+  },
+
+  main: {
+    margin: 0,
+    fontSize: 40,
+    textAlign: 'center',
+    color: '#88b6d8',
+  },
+
+  image: {
+    marginTop: 10,
+    alignSelf: "center",
+    borderRadius: 50,
+    backgroundColor: '#d1d1d1',
+  },
 });
